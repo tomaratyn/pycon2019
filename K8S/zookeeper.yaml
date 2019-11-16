@@ -1,0 +1,44 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: zookeeper
+  namespace: pycon2019
+  labels:
+    app: zookeeper
+spec:
+  ports:
+  - port: 2181
+    name: client
+  selector:
+    app: zookeeper
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  namespace: pycon2019
+  name: zookeeper
+spec:
+  selector:
+    matchLabels:
+      app: zookeeper
+  serviceName: zookeeper
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: zookeeper
+    spec:
+      containers:
+      - name: zookeeper
+        imagePullPolicy: IfNotPresent
+        image: bitnami/zookeeper:3
+        resources:
+          requests:
+            memory: "200Mi"
+            cpu: "0.1"
+        ports:
+        - containerPort: 2181
+          name: client
+        env:
+          - name: ALLOW_ANONYMOUS_LOGIN
+            value: "yes"

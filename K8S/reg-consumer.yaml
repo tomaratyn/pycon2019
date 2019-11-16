@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: registration-consumer
+  namespace: pycon2019
+spec:
+  selector:
+    matchLabels:
+      app: registration-consumer
+  template:
+    metadata:
+      labels:
+        app: registration-consumer
+    spec:
+      containers:
+        - name: consumer
+          image: event-registration-consumer:latest
+          imagePullPolicy: Never
+          tty: true
+          env:
+            - name: CONSUMER_GROUP_ID
+              value: "event_registration"
+            - name: KAFKA_BOOTSTRAP
+              value: "kafka.pycon2019.svc.cluster.local:9092"
+            - name: KAFKA_TOPIC
+              value: "event_registration"

@@ -1,0 +1,27 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: list-topics
+  namespace: pycon2019
+  labels:
+    app: setup
+spec:
+  template:
+    metadata:
+      name: list-topics
+      labels:
+        app: setup
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: list-topics
+          tty: true
+          image: 'bitnami/kafka:2'
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: KAFKA_BOOTSTRAP
+              value: "kafka.pycon2019.svc.cluster.local:9092"
+          command: [ "/bin/bash" ]
+          args:
+            - "-c"
+            - "kafka-topics.sh --bootstrap-server $KAFKA_BOOTSTRAP --list"

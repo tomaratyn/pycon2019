@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: registration-producer
+  namespace: pycon2019
+spec:
+  selector:
+    matchLabels:
+      app: registration-producer
+  template:
+    metadata:
+      labels:
+        app: registration-producer
+    spec:
+      containers:
+        - name: producer
+          image: event-registration-producer:latest
+          imagePullPolicy: Never
+          tty: true
+          env:
+            - name: KAFKA_TOPIC
+              value: "event_registration"
+            - name: KAFKA_BOOTSTRAP
+              value: "kafka.pycon2019.svc.cluster.local:9092"

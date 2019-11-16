@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ksql-server
+  labels:
+    app: ksql-server
+spec:
+  ports:
+    - port: 8088
+      name: ksql
+  selector:
+    app: ksql-server
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ksql-server
+spec:
+  selector:
+    matchLabels:
+      app: ksql-server
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: ksql-server
+    spec:
+      containers:
+        - name: ksql-server
+          image: confluentinc/cp-ksql-server:5.3.1
+          imagePullPolicy: IfNotPresent
+          tty: true
+          env:
+            - name: KSQL_BOOTSTRAP_SERVERS
+              value: "kafka.test-sidecar.svc.cluster.local:9092"
+            - name: KSQL_LISTENERS
+              value: "http://0.0.0.0:8088/"
+            - name: KSQL_KSQL_SERVICE_ID
+              value: "confluent_test_123"

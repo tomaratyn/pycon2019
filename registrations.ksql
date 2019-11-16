@@ -1,0 +1,18 @@
+CREATE STREAM registrations (
+    event varchar,
+    name varchar,
+    session varchar
+)
+with  (
+    KAFKA_TOPIC='event_registration',
+    VALUE_FORMAT='JSON',
+    KEY='event'
+)
+;
+
+
+CREATE TABLE attendance_count AS
+    SELECT event, session, count(*)
+    from registrations
+    group by event, session
+;

@@ -1,0 +1,7 @@
+FROM python:3.7
+RUN mkdir /app
+ADD . /app
+WORKDIR /app
+RUN pip install pipenv
+RUN pipenv sync -d
+ENTRYPOINT pipenv run python /app/src/event_registration_producer.py

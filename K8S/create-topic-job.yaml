@@ -1,0 +1,27 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: create-topic
+  namespace: pycon2019
+  labels:
+    app: setup
+spec:
+  template:
+    metadata:
+      name: create-topic
+      labels:
+        app: setup
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: create-topic
+          tty: true
+          image: 'bitnami/kafka:2'
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: KAFKA_BOOTSTRAP
+              value: "kafka.pycon2019.svc.cluster.local:9092"
+          command: [ "/bin/bash" ]
+          args:
+            - "-c"
+            - "kafka-topics.sh --bootstrap-server $KAFKA_BOOTSTRAP --topic event_registration --partitions 2 --replication-factor 1 --create"

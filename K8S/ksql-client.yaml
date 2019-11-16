@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ksql-client
+spec:
+  selector:
+    matchLabels:
+      app: ksql-client
+  template:
+    metadata:
+      labels:
+        app: ksql-client
+    spec:
+      containers:
+        - name: consumer
+          image: event-ksql-client:latest
+          imagePullPolicy: Never
+          tty: true
+          env:
+            - name: KSQL_SERVER
+              value: "ksql-server.test-sidecar.svc.cluster.local:8088"
